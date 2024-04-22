@@ -55,7 +55,6 @@ function onBuyClicked() {
                 url: 'https://url/of/the/order/in/your/website',
                 mc: '1234', //Your merchant category code
                 tn: 'Purchase in Merchant',
-                test: 'default_test_value', // Default value for the Test Field
             },
         }
     ];
