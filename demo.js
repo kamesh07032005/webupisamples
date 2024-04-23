@@ -49,11 +49,11 @@ function onBuyClicked() {
         {
             supportedMethods: ['https://tez.google.com/pay'],
             data: {
-                pa: 'merchant-vpa@xxx',
-                pn: 'Merchant Name',
+                pa: 'vaseegrahveda@kvb',
+                pn: 'Vaseegrah Veda',
                 tr: '1234ABCD',  // Your custom transaction reference ID
-                url: 'https://url/of/the/order/in/your/website',
-                mc: '1234', //Your merchant category code
+                url: 'https://google.com',
+                mc: '5799', //Your merchant category code
                 tn: 'Purchase in Merchant',
             },
         }
