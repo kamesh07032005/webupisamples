@@ -11,30 +11,23 @@ const canMakePaymentCache = 'canMakePaymentCache';
  * @param {PaymentRequest} request The payment request object.
  * @return {Promise} a promise containing the result of whether can make payment.
  */
-function checkCanMakePayment(request) {
+async function checkCanMakePayment(request) {
     // Check canMakePayment cache, use cache result directly if it exists.
     if (sessionStorage.hasOwnProperty(canMakePaymentCache)) {
-        return Promise.resolve(JSON.parse(sessionStorage[canMakePaymentCache]));
+        return JSON.parse(sessionStorage[canMakePaymentCache]);
     }
 
-    // If canMakePayment() isn't available, default to assume the method is
-    // supported.
-    var canMakePaymentPromise = Promise.resolve(true);
+    try {
+        // Feature detect canMakePayment().
+        const result = request.canMakePayment ? await request.canMakePayment() : true;
 
-    // Feature detect canMakePayment().
-    if (request.canMakePayment) {
-        canMakePaymentPromise = request.canMakePayment();
+        // Store the result in cache for future usage.
+        sessionStorage[canMakePaymentCache] = JSON.stringify(result);
+        return result;
+    } catch (err) {
+        console.log('Error calling canMakePayment: ' + err);
+        throw err; // Rethrow the error for the caller to handle
     }
-
-    return canMakePaymentPromise
-        .then((result) => {
-            // Store the result in cache for future usage.
-            sessionStorage[canMakePaymentCache] = result;
-            return result;
-        })
-        .catch((err) => {
-            console.log('Error calling canMakePayment: ' + err);
-        });
 }
 
 /** Launches payment request flow when user taps on buy button. */
@@ -51,7 +44,7 @@ function onBuyClicked() {
             data: {
                 pa: 'vaseegrahveda@kvb',
                 pn: 'Vaseegrah Veda',
-                tr: '1234ABCD',  // Your custom transaction reference ID
+                tr: '1894ABCD',  // Your custom transaction reference ID
                 url: 'https://google.com',
                 mc: '5799', //Your merchant category code
                 tn: 'Purchase in Merchant',
@@ -90,8 +83,7 @@ function onBuyClicked() {
         return;
     }
 
-    var canMakePaymentPromise = checkCanMakePayment(request);
-    canMakePaymentPromise
+    checkCanMakePayment(request)
         .then((result) => {
             showPaymentUI(request, result);
         })
@@ -105,7 +97,7 @@ function onBuyClicked() {
  *
  * @private
  * @param {PaymentRequest} request The payment request object.
- * @param {Promise} canMakePayment The promise for whether can make payment.
+ * @param {boolean} canMakePayment Whether can make payment.
  */
 function showPaymentUI(request, canMakePayment) {
     if (!canMakePayment) {
