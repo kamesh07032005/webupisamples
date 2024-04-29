@@ -48,6 +48,7 @@ function onBuyClicked() {
                 url: 'https://google.com',
                 mc: '5799', //Your merchant category code
                 tn: 'Purchase in Merchant',
+                originatingPlatform: 'IOS_APP',
             },
         }
     ];
