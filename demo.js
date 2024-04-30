@@ -365,7 +365,7 @@ async function initiateMerchantPayment() {
             }
         },
         "expiryTime": "2017-02-15T10:50:30Z",
-        "originatingPlatform": "ANDROID_APP"
+        "originatingPlatform": "IOS_APP"
     };
 
     fetch('https://nbupayments.googleapis.com/v1/merchantPayments:initiate', {
